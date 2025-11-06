@@ -7,8 +7,6 @@
 
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <style>
@@ -26,10 +24,10 @@
       <div class="col col-xl-10">
         <div class="card" style="border-radius: 1rem;">
           <div class="row g-0">
-            
+
             <!-- Left image -->
             <div class="col-md-6 col-lg-5 d-none d-md-block">
-              <img src="https://img.freepik.com/free-vector/sign-page-abstract-concept-illustration-enter-application-mobile-screen-user-login-form-website-page-interface-ui-new-profile-registration-email-account_335657-936.jpg?semt=ais_hybrid&w=740&q=80"
+              <img src="https://img.freepik.com/free-vector/sign-page-abstract-concept-illustration-enter-application-mobile-screen-user-login-form-website-page-interface-ui-new-profile-registration-email-account_335657-936.jpg"
                 alt="register form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
             </div>
 
@@ -38,38 +36,47 @@
               <div class="card-body p-4 p-lg-5 text-black">
 
                 <form method="POST" action="<?= base_url('store') ?>">
-                  <?= csrf_field() ?> <!-- CSRF token -->
+                  <?= csrf_field() ?>
 
                   <h1 class="fw-bold mb-4">Register</h1>
 
-                  <!-- Username -->
+                  <!-- Name -->
                   <div class="form-outline mb-4">
-                    <input type="text" name="username" class="form-control form-control-lg" placeholder="Username" />
-                    <label class="form-label">Username</label>
+                    <input type="text" name="name" value="<?= old('name') ?>"
+                      class="form-control form-control-lg <?= session()->getFlashdata('errors')['name'] ?? '' ? 'is-invalid' : '' ?>"
+                      placeholder="Full Name" />
+                    <label class="form-label">Full Name</label>
+                    <?php if(session()->getFlashdata('errors')['name'] ?? false): ?>
+                      <div class="text-danger mt-1"><?= session()->getFlashdata('errors')['name'] ?></div>
+                    <?php endif; ?>
                   </div>
 
                   <!-- Email -->
                   <div class="form-outline mb-4">
-                    <input type="email" name="email" class="form-control form-control-lg" placeholder="Email address" />
+                    <input type="email" name="email" value="<?= old('email') ?>"
+                      class="form-control form-control-lg <?= session()->getFlashdata('errors')['email'] ?? '' ? 'is-invalid' : '' ?>"
+                      placeholder="Email address" />
                     <label class="form-label">Email</label>
+                    <?php if(session()->getFlashdata('errors')['email'] ?? false): ?>
+                      <div class="text-danger mt-1"><?= session()->getFlashdata('errors')['email'] ?></div>
+                    <?php endif; ?>
                   </div>
 
                   <!-- Password -->
                   <div class="form-outline mb-4">
-                    <input type="password" name="password" class="form-control form-control-lg" placeholder="Password" />
+                    <input type="password" name="password"
+                      class="form-control form-control-lg <?= session()->getFlashdata('errors')['password'] ?? '' ? 'is-invalid' : '' ?>"
+                      placeholder="Password" />
                     <label class="form-label">Password</label>
+                    <?php if(session()->getFlashdata('errors')['password'] ?? false): ?>
+                      <div class="text-danger mt-1"><?= session()->getFlashdata('errors')['password'] ?></div>
+                    <?php endif; ?>
                   </div>
 
                   <!-- Submit -->
                   <div class="pt-1 mb-4">
-                    <input class="btn btn-dark btn-lg btn-block" type="submit">
+                    <input class="btn btn-dark btn-lg btn-block" type="submit" value="Register">
                   </div>
-
-                  <!-- Already have account -->
-                  <!-- <p class="mb-0">Already have an account? 
-                    <a href="<?= site_url('login') ?>" class="text-dark">Login here</a>
-                  </p> -->
-
                 </form>
 
               </div>
@@ -96,16 +103,13 @@ Swal.fire({
 <?php if(session()->getFlashdata('error')): ?>
 Swal.fire({
     icon: 'error',
-    title: 'Error!',
+    title: 'Validation Error!',
     text: '<?= session()->getFlashdata('error') ?>',
-    confirmButtonText: 'OK'
+    confirmButtonText: 'Fix it'
 });
 <?php endif; ?>
 </script>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
-`

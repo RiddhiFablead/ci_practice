@@ -6,19 +6,11 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// $routes->get('/', 'Home::index');
- 
-// $routes->get('hii','Hello::greet');
- 
-// $routes->get('welcome','Hello::index');
- 
-// $routes->group('first',function($routes){
-//     $routes->get('index','Hello::index');
-//     $routes->get('greet','Hello::greet');
-//     $routes->get('bye','Hello::bye');
-// });
- 
-// $routes->get('form','Form::store');
- 
-$routes->get('/', 'AuthController::index');
-$routes->post('store','AuthController::store');
+//  $routes->get('/', 'Home::index');
+ $routes->get('about','Hello::about');
+ $routes->get('hello','Hello::index');
+ // Registration routes 
+$routes->get('/', 'AuthController::register');
+$routes->post('store', 'AuthController::store'); // Handle form submission
+ $routes->get('/login', 'AuthController::index');
+// $routes->post('store','AuthController::store');
