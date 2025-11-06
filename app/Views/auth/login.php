@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        .img-fluid {
-            max-width: 100%;
-            height: 630px!important;
-        }
-    </style>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+.img-fluid {
+  max-width: 100%;
+  height: 630px !important;
+}
+</style>
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <section class="vh-100" style="background-color: #9A616D;">
   <div class="container py-5 h-100">
@@ -22,53 +24,84 @@
       <div class="col col-xl-10">
         <div class="card" style="border-radius: 1rem;">
           <div class="row g-0">
+
+            <!-- Left image -->
             <div class="col-md-6 col-lg-5 d-none d-md-block">
-              <img src="https://img.freepik.com/free-vector/sign-page-abstract-concept-illustration-enter-application-mobile-screen-user-login-form-website-page-interface-ui-new-profile-registration-email-account_335657-936.jpg?semt=ais_hybrid&w=740&q=80"
-                alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
+              <img src="https://img.freepik.com/free-vector/login-concept-illustration_114360-739.jpg"
+                   alt="login form" class="img-fluid" style="border-radius: 1rem 0 0 1rem;" />
             </div>
+
+            <!-- Form -->
             <div class="col-md-6 col-lg-7 d-flex align-items-center">
               <div class="card-body p-4 p-lg-5 text-black">
 
-                <form method="POST" action="<?= site_url('login') ?>">
+                <form method="POST" action="<?= base_url('checkLogin') ?>">
+                  <?= csrf_field() ?>
 
-                  <?= csrf_field() ?> <!-- CSRF token -->
+                  <h1 class="fw-bold mb-4">Login</h1>
 
-                  <div class="d-flex align-items-center mb-3 pb-1">
-                    <span class="h1 fw-bold mb-0">Login</span>
+                  <!-- Email -->
+                  <div class="form-outline mb-4">
+                    <input type="email" name="email" value="<?= old('email') ?>"
+                      class="form-control form-control-lg <?= session()->getFlashdata('errors')['email'] ?? '' ? 'is-invalid' : '' ?>"
+                      placeholder="Email address" />
+                    <label class="form-label">Email</label>
+                    <?php if(session()->getFlashdata('errors')['email'] ?? false): ?>
+                      <div class="text-danger mt-1"><?= session()->getFlashdata('errors')['email'] ?></div>
+                    <?php endif; ?>
                   </div>
 
-                  <?php if(session()->getFlashdata('error')): ?>
-                      <div class="alert alert-danger"><?= session()->getFlashdata('error') ?></div>
-                  <?php endif; ?>
-
+                  <!-- Password -->
                   <div class="form-outline mb-4">
-                    <input type="email" name="email" class="form-control form-control-lg" required />
-                    <label class="form-label">Email address</label>
-                  </div>
-
-                  <div class="form-outline mb-4">
-                    <input type="password" name="password" class="form-control form-control-lg" required />
+                    <input type="password" name="password"
+                      class="form-control form-control-lg <?= session()->getFlashdata('errors')['password'] ?? '' ? 'is-invalid' : '' ?>"
+                      placeholder="Password" />
                     <label class="form-label">Password</label>
+                    <?php if(session()->getFlashdata('errors')['password'] ?? false): ?>
+                      <div class="text-danger mt-1"><?= session()->getFlashdata('errors')['password'] ?></div>
+                    <?php endif; ?>
                   </div>
 
+                  <!-- Submit -->
                   <div class="pt-1 mb-4">
-                    <button class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
+                    <input class="btn btn-dark btn-lg btn-block" type="submit" value="Login">
                   </div>
 
-                  <p class="mb-5 pb-lg-2" style="color: #393f81;">Don't have an account? 
-                      <a href="<?= site_url('register') ?>" style="color: #393f81;">Register here</a>
-                  </p>
+                  <p>Don't have an account? <a href="<?= base_url('/') ?>" class="link-info">Register here</a></p>
 
                 </form>
 
               </div>
             </div>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
-    
+
+<!-- SweetAlert for flash messages -->
+<script>
+<?php if(session()->getFlashdata('success')): ?>
+Swal.fire({
+    icon: 'success',
+    title: 'Success!',
+    text: '<?= session()->getFlashdata('success') ?>',
+    confirmButtonText: 'OK'
+});
+<?php endif; ?>
+
+<?php if(session()->getFlashdata('error')): ?>
+Swal.fire({
+    icon: 'error',
+    title: 'Error!',
+    text: '<?= session()->getFlashdata('error') ?>',
+    confirmButtonText: 'Try Again'
+});
+<?php endif; ?>
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

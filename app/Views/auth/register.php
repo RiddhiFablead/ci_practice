@@ -77,6 +77,7 @@
                   <div class="pt-1 mb-4">
                     <input class="btn btn-dark btn-lg btn-block" type="submit" value="Register">
                   </div>
+                  <p>Don't have an account? <a href="<?= base_url('/login') ?>" class="link-info">Login</a></p>
                 </form>
 
               </div>

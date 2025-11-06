@@ -9,8 +9,19 @@ use CodeIgniter\Router\RouteCollection;
 //  $routes->get('/', 'Home::index');
  $routes->get('about','Hello::about');
  $routes->get('hello','Hello::index');
+ 
  // Registration routes 
-$routes->get('/', 'AuthController::register');
+
+ $routes->get('/', 'AuthController::register');
 $routes->post('store', 'AuthController::store'); // Handle form submission
- $routes->get('/login', 'AuthController::index');
-// $routes->post('store','AuthController::store');
+
+// Login page
+ 
+$routes->get('/login', 'AuthController::login');
+$routes->post('checkLogin', 'AuthController::checkLogin');// Login form submit (POST)
+$routes->get('logout', 'AuthController::logout');// Logout
+$routes->group('',['filter'=>'auth'],function($routes){
+      $routes->get('dashboard', 'Dashboard::index');
+});
+
+
