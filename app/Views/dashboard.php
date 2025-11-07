@@ -1,51 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+<?= $this->extend('layout') ?>
+<?= $this->section('content') ?>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- SweetAlert -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <style>
-    body {
-      background-color: #f7f7f7;
-      font-family: 'Poppins', sans-serif;
-    }
-    .card {
-      border-radius: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    }
-  </style>
-</head>
-<body>
-
-  <div class="container mt-5">
-    <div class="card p-5 text-center">
-      <h1 class="mb-4">Welcome, <?= session()->get('name'); ?> 👋</h1>
-      <p class="lead">You have successfully logged in to your dashboard!</p>
-
-      <a href="<?= base_url('logout') ?>" class="btn btn-danger mt-3">Logout</a>
+<div class="row g-4">
+  <div class="col-md-4">
+    <div class="card eco-card p-4 text-center">
+      <i class="bi bi-recycle fs-1 text-success"></i>
+      <h5 class="mt-2">Total Clothes Donated</h5>
+      <h3><?= esc($totalClothes) ?></h3>
     </div>
   </div>
+  <div class="col-md-4">
+    <div class="card eco-card p-4 text-center">
+      <i class="bi bi-clock-history fs-1 text-warning"></i>
+      <h5 class="mt-2">Pending Approval</h5>
+      <h3><?= esc($pendingClothes) ?></h3>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card eco-card p-4 text-center">
+      <i class="bi bi-check-circle fs-1 text-success"></i>
+      <h5 class="mt-2">Approved Donations</h5>
+      <h3><?= esc($approvedClothes) ?></h3>
+    </div>
+  </div>
+</div>
 
-  <!-- SweetAlert for success message -->
-  <script>
-    <?php if(session()->getFlashdata('success')): ?>
-      Swal.fire({
-        icon: 'success',
-        title: 'Welcome!',
-        text: '<?= session()->getFlashdata('success') ?>',
-        confirmButtonText: 'OK'
-      });
-    <?php endif; ?>
-  </script>
+<div class="card mt-5 p-4 text-center">
+  <h4 class="fw-bold text-success">Welcome to EcoSwap 🌿</h4>
+  <p class="text-muted mb-3">Turn your old clothes into new opportunities. Reuse. Earn. Save the planet.</p>
+  <a href="<?= base_url('clothes/add') ?>" class="btn btn-success me-2"><i class="bi bi-plus-circle"></i> Donate Clothes</a>
+  <a href="<?= base_url('coins') ?>" class="btn btn-outline-success"><i class="bi bi-coin"></i> View Coins</a>
+  <a href="<?= base_url('chatbot') ?>" class="btn btn-outline-success"><i class="bi bi-chat-dots"></i> Chat with EcoBot</a>
+</div>
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?= $this->endSection() ?>

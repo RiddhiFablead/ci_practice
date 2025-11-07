@@ -22,6 +22,9 @@ $routes->post('checkLogin', 'AuthController::checkLogin');// Login form submit (
 $routes->get('logout', 'AuthController::logout');// Logout
 $routes->group('',['filter'=>'auth'],function($routes){
       $routes->get('dashboard', 'Dashboard::index');
+      $routes->get('clothes', 'ClothesController::index');
+    $routes->get('clothes/add', 'ClothesController::add');
+    $routes->post('clothes/store', 'ClothesController::store');
 });
 
 
