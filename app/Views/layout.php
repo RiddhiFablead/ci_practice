@@ -85,7 +85,7 @@
 
     EcoSwap
   </div>
-  <a href="<?= base_url('admin/dashboard') ?>" class="<?= url_is('admin/dashboard') ? 'active' : '' ?>"><i class="bi bi-speedometer2"></i> Dashboard</a>
+  <a href="<?= base_url('dashboard') ?>" class="<?= url_is('admin/dashboard') ? 'active' : '' ?>"><i class="bi bi-speedometer2"></i> Dashboard</a>
   <a href="<?= base_url('clothes') ?>"><i class="bi bi-bag"></i> Clothes</a>
   <a href="<?= base_url('clothes/add') ?>"><i class="bi bi-plus-circle"></i> Add Clothes</a>
   <a href="<?= base_url('coins') ?>"><i class="bi bi-coin"></i> My Coins</a>

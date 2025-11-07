@@ -25,6 +25,11 @@ $routes->group('',['filter'=>'auth'],function($routes){
       $routes->get('clothes', 'ClothesController::index');
     $routes->get('clothes/add', 'ClothesController::add');
     $routes->post('clothes/store', 'ClothesController::store');
+      $routes->get('clothes/edit/(:num)', 'ClothesController::edit/$1');     // Fetch for edit modal
+    $routes->post('clothes/update', 'ClothesController::update');          // Update (AJAX)
+    $routes->delete('clothes/delete/(:num)', 'ClothesController::delete/$1'); // Delete
+    $routes->get('clothes/download/(:num)', 'ClothesController::download/$1'); // Download
+    $routes->get('clothes/filter', 'ClothesController::filter');  
 });
 
 

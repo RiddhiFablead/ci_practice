@@ -5,63 +5,141 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\ClothesModel;
 use App\Models\UserModel;
-use CodeIgniter\HTTP\ResponseInterface;
 
 class ClothesController extends BaseController
 {
     public function index()
     {
-        $clothesModel =new ClothesModel();
+        $clothesModel = new ClothesModel();
         $userId = session()->get('id');
-        $data['clothes']=$clothesModel->where('user_id',$userId)->findAll();
-        return view('clothes/index',$data);
+
+        $data['clothes'] = $clothesModel->where('user_id', $userId)->findAll();
+
+        return view('clothes/index', $data);
     }
+
     public function add()
     {
         return view('clothes/add');
     }
-    public function store()
-    {
-        $clothesModel =new ClothesModel();
-        $userModel =new UserModel();
-        $userId =session()->get('id');
-        $validation = \Config\Services::validation();
 
-        $validation ->setRules([
-            'category' => 'required|max_length[100]',
-            'condition' => 'required|max_length[50]',
-            'image' => 'uploaded[image]|max_size[image,2048]|is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]',
+   public function store()
+{
+    $validation = \Config\Services::validation();
+
+    $validation->setRules([
+        'category'  => 'required',
+        'condition' => 'required',
+         'status'    => 'required|in_list[pending,approved,rejected]',  
+        'image'     => 'uploaded[image]|max_size[image,2048]|is_image[image]|mime_in[image,image/jpg,image/jpeg,image/png]',
+    ]);
+
+    if (!$validation->withRequest($this->request)->run()) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'errors' => $validation->getErrors()
         ]);
-
-        if(!$validation->withRequest($this->request)->run()){
-            return redirect()->back()
-            ->withInput()
-            ->with('errors',$validation->getErrors());
-        }
-        //Handle image upload
-        $img=$this->request->getFile('image');
-        $newName=$img->getRandomName();
-          $img->move(FCPATH . 'uploads/clothes', $newName);
-
-
-           // ✅ Prepare data
-           $data=[
-            'user_id'=>$userId,
-            'category'=>$this->request->getPost('category'),
-              'condition' => $this->request->getPost('condition'),
-            'image'     => $newName,
-            'status'    => 'pending',
-            'created_at' => date('Y-m-d H:i:s'),
-           ];
-
-
-           //save data
-           if($clothesModel->insert($data)){
-                return redirect()->to('/clothes')->with('success','Clothes Submited  Successfully');
-           }
-           else{
-                return redirect()->back()->with('error','Failed to submit clothes.');
-           }
     }
 
+    $imageFile = $this->request->getFile('image');
+    $imageName = $imageFile->getRandomName();
+    $imageFile->move(FCPATH . 'uploads/clothes', $imageName);
+
+    $model = new \App\Models\ClothesModel();
+    $model->save([
+        'user_id'   => session()->get('id'),
+        'category'  => $this->request->getPost('category'),
+        'condition' => $this->request->getPost('condition'),
+          'status'    => $this->request->getPost('status'),
+        'image'     => $imageName,
+    ]);
+
+    return $this->response->setJSON([
+        'status'  => 'success',
+        'message' => 'Your clothes have been added successfully! 🌿'
+    ]);
+}
+    public function edit($id)
+    {
+        $model=new ClothesModel();
+        $item=$model->find($id);
+
+        if(!$item)
+        {
+            return $this->response->setJSON(['status'=>'error','message'=>'Item not found']);
+        }
+        return $this->response->setJSON($item);
+    }
+     // ✅ Update (AJAX)
+    public function update()
+    {
+        $model = new ClothesModel();
+        $id = $this->request->getPost('id');
+        $item = $model->find($id);
+
+        if (!$item) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Item not found']);
+        }
+
+        $data = [
+            'category'  => $this->request->getPost('category'),
+            'condition' => $this->request->getPost('condition'),
+        ];
+
+        // ✅ If new image uploaded
+        $file = $this->request->getFile('image');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move(FCPATH . 'uploads/clothes', $newName);
+
+            // remove old image
+            if (is_file(FCPATH . 'uploads/clothes/' . $item['image'])) {
+                unlink(FCPATH . 'uploads/clothes/' . $item['image']);
+            }
+
+            $data['image'] = $newName;
+        }
+
+        $model->update($id, $data);
+
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Clothes updated successfully ✅'
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $model = new ClothesModel();
+        $item=$model->find($id);
+        if(!$item)
+        {
+            return $this->response->setJSON(['status'=>'error','message'=>'Item not found']);
+        }
+       // Delete image file
+        if (is_file(FCPATH . 'uploads/clothes/' . $item['image'])) {
+            unlink(FCPATH . 'uploads/clothes/' . $item['image']);
+        }
+        $model->delete($id);
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Item deleted successfully 🗑️'
+        ]);
+
+    }
+    public function download($id)
+    {
+        $model=new ClothesModel();
+        $item =$model->find($id);
+        if(!$item)
+        {
+            return redirect()->back()->with('error','Item not found');
+        }
+          $filePath = FCPATH . 'uploads/clothes/' . $item['image'];
+        if (file_exists($filePath)) {
+            return $this->response->download($filePath, null);
+        } else {
+            return redirect()->back()->with('error', 'File not found');
+        }
+    }
 }
