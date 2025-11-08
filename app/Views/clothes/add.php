@@ -75,6 +75,12 @@
                 <?= csrf_field() ?>
 
                 <div class="row">
+                    <div class="col-12 mb-3">
+                        <label for="name" class="form-label">
+                            Your Name <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Enter your name" required>
+                    </div>
                     <div class="col-md-6 mb-3">
                         <label for="category" class="form-label">
                             Category <span class="text-danger">*</span>
@@ -102,7 +108,7 @@
                         </select>
                     </div>
 
-                       <!-- Status -->
+                    <!-- Status -->
                     <div class="col-12 mb-4">
                         <label for="status" class="form-label">
                             Status <span class="text-danger">*</span>
@@ -140,58 +146,58 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-$(document).ready(function() {
-    $("#clothesForm").on("submit", function(e) {
-        e.preventDefault();
+    $(document).ready(function() {
+        $("#clothesForm").on("submit", function(e) {
+            e.preventDefault();
 
-        let form = $(this)[0];
-        let formData = new FormData(form);
-        $("#submitBtn").prop("disabled", true).html('<i class="bi bi-hourglass-split"></i> Submitting...');
+            let form = $(this)[0];
+            let formData = new FormData(form);
+            $("#submitBtn").prop("disabled", true).html('<i class="bi bi-hourglass-split"></i> Submitting...');
 
-        $.ajax({
-            url: "<?= base_url('clothes/store') ?>",
-            type: "POST",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                $("#submitBtn").prop("disabled", false).html('<i class="bi bi-cloud-upload"></i> Submit Clothes');
+            $.ajax({
+                url: "<?= base_url('clothes/store') ?>",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $("#submitBtn").prop("disabled", false).html('<i class="bi bi-cloud-upload"></i> Submit Clothes');
 
-                if (response.status === 'success') {
+                    if (response.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: response.message || 'Clothes added successfully!',
+                            confirmButtonColor: '#2b6e2b'
+                        }).then(() => {
+                            $("#clothesForm")[0].reset();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Oops!',
+                            text: response.message || 'Something went wrong, please try again.',
+                            confirmButtonColor: '#2b6e2b'
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    $("#submitBtn").prop("disabled", false).html('<i class="bi bi-cloud-upload"></i> Submit Clothes');
+
+                    let errorMessage = "An error occurred.";
+                    if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).join("\n");
+                    }
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Success!',
-                        text: response.message || 'Clothes added successfully!',
-                        confirmButtonColor: '#2b6e2b'
-                    }).then(() => {
-                        $("#clothesForm")[0].reset();
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Oops!',
-                        text: response.message || 'Something went wrong, please try again.',
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorMessage,
                         confirmButtonColor: '#2b6e2b'
                     });
                 }
-            },
-            error: function(xhr) {
-                $("#submitBtn").prop("disabled", false).html('<i class="bi bi-cloud-upload"></i> Submit Clothes');
-
-                let errorMessage = "An error occurred.";
-                if (xhr.responseJSON && xhr.responseJSON.errors) {
-                    errorMessage = Object.values(xhr.responseJSON.errors).join("\n");
-                }
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: errorMessage,
-                    confirmButtonColor: '#2b6e2b'
-                });
-            }
+            });
         });
     });
-});
 </script>
 
 <?= $this->endSection() ?>

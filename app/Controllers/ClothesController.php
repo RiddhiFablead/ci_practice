@@ -8,16 +8,26 @@ use App\Models\UserModel;
 
 class ClothesController extends BaseController
 {
+    // public function index()
+    // {
+    //     $clothesModel = new ClothesModel();
+    //     $userId = session()->get('id');
+
+    //     $data['clothes'] = $clothesModel->where('user_id', $userId)->findAll();
+
+    //     return view('clothes/index', $data);
+    // }
+
     public function index()
     {
         $clothesModel = new ClothesModel();
-        $userId = session()->get('id');
-
-        $data['clothes'] = $clothesModel->where('user_id', $userId)->findAll();
-
-        return view('clothes/index', $data);
+        $builder=$clothesModel->builder();
+        $builder->select('clothes.*,users.name as user_name');
+        $builder->join('users','users.id=clothes.user_id');
+        $builder->orderBy('clothes.created_at','DESC');
+        $data['clothes']=$builder->get()->getResultArray();
+        return view('clothes/index',$data);
     }
-
     public function add()
     {
         return view('clothes/add');
@@ -28,6 +38,8 @@ class ClothesController extends BaseController
     $validation = \Config\Services::validation();
 
     $validation->setRules([
+          
+          'name'      => 'required|min_length[2]', 
         'category'  => 'required',
         'condition' => 'required',
          'status'    => 'required|in_list[pending,approved,rejected]',  
@@ -48,6 +60,7 @@ class ClothesController extends BaseController
     $model = new \App\Models\ClothesModel();
     $model->save([
         'user_id'   => session()->get('id'),
+          'name'      => $this->request->getPost('name'),  // Added giver’s name
         'category'  => $this->request->getPost('category'),
         'condition' => $this->request->getPost('condition'),
           'status'    => $this->request->getPost('status'),

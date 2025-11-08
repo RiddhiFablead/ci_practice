@@ -74,6 +74,7 @@
                 <thead>
                     <tr>
                         <th>Image</th>
+                         <th>Name</th>
                         <th>Category</th>
                         <th>Condition</th>
                         <th>Status</th>
@@ -86,16 +87,27 @@
                         <?php foreach ($clothes as $item): ?>
                             <tr data-id="<?= $item['id'] ?>">
                                 <td><img src="<?= base_url('uploads/clothes/' . $item['image']) ?>" width="60" height="60" class="rounded-circle"></td>
+                                 <td><?= esc($item['user_name']) ?></td>
                                 <td><?= ucfirst($item['category']) ?></td>
                                 <td><?= ucfirst($item['condition']) ?></td>
                                 <td><span class="status-badge status-<?= $item['status'] ?>"><?= ucfirst($item['status']) ?></span></td>
                                 <td><?= date('d M Y', strtotime($item['created_at'])) ?></td>
-                                <td class="action-btn">
-                                    <i class="fa-solid fa-eye text-primary viewBtn" title="View"></i>
-                                    <i class="fa-solid fa-pen text-success editBtn" title="Edit"></i>
-                                    <i class="fa-solid fa-trash text-danger deleteBtn" title="Delete"></i>
-                                    <i class="fa-solid fa-download text-dark downloadBtn" title="Download"></i>
-                                </td>
+                               <td class="action-btn">
+                    <div class="d-flex justify-content-center gap-2">
+                        <button class="btn btn-sm btn-info viewBtn" title="View">
+                            <i class="fa-solid fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-success editBtn" title="Edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger deleteBtn" title="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary downloadBtn" title="Download">
+                            <i class="fa-solid fa-download"></i>
+                        </button>
+                    </div>
+                </td>
                             </tr>
                         <?php endforeach; ?>
                     <?php else: ?>

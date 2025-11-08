@@ -11,6 +11,7 @@ class ClothesModel extends Model
 
     protected $allowedFields = [
         'user_id',
+          'name',      
         'category',
         'condition',
         'image',
@@ -19,4 +20,19 @@ class ClothesModel extends Model
     ];
 
     protected $useTimestamps = false; // We are managing created_at manually
+
+     /**
+     * Get all clothes records (for admin)
+     */  
+    public function getAllClothes()
+    {
+        return $this->orderBy('created_at', 'DESC')->findAll();
+    }
+      //* Get clothes belonging to a specific user
+     public function getClothesByUser($userId)
+    {
+        return $this->where('user_id', $userId)
+                    ->orderBy('created_at', 'DESC')
+                    ->findAll();
+    }
 }

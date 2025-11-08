@@ -13,7 +13,7 @@
     }
     .sidebar {
       width: 250px;
-      background-color: #0a3d62;
+      background-color: #dceaf5ff;
       color: #fff;
       flex-shrink: 0;
       display: flex;
@@ -25,7 +25,7 @@
     }
     .sidebar .nav-link.active,
     .sidebar .nav-link:hover {
-      background-color: #1e90ff;
+      background-color: #d3f595ff;
       color: #fff;
     }
     .content {
@@ -39,7 +39,7 @@
       z-index: 10;
     }
     .navbar-brand {
-      color: #0a3d62 !important;
+      color: #48620aff !important;
       font-weight: bold;
     }
   </style>
