@@ -94,9 +94,13 @@
       <a href="<?= base_url('users') ?>" class="nav-link <?= url_is('users*') ? 'active' : '' ?>">
         <i class="bi bi-people me-2"></i> Users
       </a>
-      <a href="<?= base_url('items') ?>" class="nav-link <?= url_is('items*') ? 'active' : '' ?>">
-        <i class="bi bi-recycle me-2"></i> Recycled Items
-      </a>
+       <a href="<?= base_url('category') ?>" class="nav-link <?= url_is('category*') ? 'active' : '' ?>">
+    <i class="bi bi-tags me-2"></i> Categories
+  </a>
+
+  <a href="<?= base_url('items') ?>" class="nav-link <?= url_is('items*') ? 'active' : '' ?>">
+    <i class="bi bi-recycle me-2"></i> Recycled Items
+      
       <a href="<?= base_url('products') ?>" class="nav-link <?= url_is('products*') ? 'active' : '' ?>">
         <i class="bi bi-bag-check me-2"></i> Products
       </a>

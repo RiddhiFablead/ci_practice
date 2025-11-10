@@ -30,6 +30,15 @@ $routes->group('',['filter'=>'auth'],function($routes){
     $routes->delete('clothes/delete/(:num)', 'ClothesController::delete/$1'); // Delete
     $routes->get('clothes/download/(:num)', 'ClothesController::download/$1'); // Download
     $routes->get('clothes/filter', 'ClothesController::filter');  
+    $routes->get('chatbot', 'Chatbot::index');
+    $routes->post('chatbot/send', 'Chatbot::send');
+    $routes->get('category', 'Category::index');
+    $routes->get('category/create', 'Category::create');
+    $routes->post('category/store', 'Category::store'); 
+   $routes->get('category/edit/(:num)', 'Category::edit/$1'); // Show edit form for ID
+$routes->post('category/update', 'Category::update');
+    $routes->post('category/delete/(:num)', 'Category::delete/$1');
+
 });
 
 
