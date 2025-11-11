@@ -37,8 +37,19 @@ $routes->group('',['filter'=>'auth'],function($routes){
     $routes->post('category/store', 'Category::store'); 
    $routes->get('category/edit/(:num)', 'Category::edit/$1'); // Show edit form for ID
 $routes->post('category/update', 'Category::update');
-    $routes->post('category/delete/(:num)', 'Category::delete/$1');
+   $routes->get('recycle', 'RecycleItem::index');             // List all recycle items
+$routes->get('recycle/create', 'RecycleItem::create');     // Show create form
+$routes->post('recycle/store', 'RecycleItem::store');      // Store new recycle item
+$routes->get('recycle/edit/(:num)', 'RecycleItem::edit/$1'); // Fetch item data (AJAX)
+$routes->post('recycle/update', 'RecycleItem::update');    // Update item
+$routes->post('recycle/delete/(:num)', 'RecycleItem::delete/$1'); // Delete item
+$routes->get('categories/active', 'Category::getActiveCategories');
 
+
+// Optional alias — if your JS or HTML still calls `/items`
+$routes->get('items', 'RecycleItem::index');
+
+   
 });
 
 

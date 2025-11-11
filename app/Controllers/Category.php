@@ -47,50 +47,59 @@ class Category extends BaseController
             'message'=>'Category created successfully'
         ]);
     }
-   public function edit($id)
+     public function edit($id)
     {
         $model = new CategoryModel();
-        $data['category'] = $model->find($id);
+        $category = $model->find($id);
 
-        if (!$data['category']) {
-            return redirect()->to(base_url('category'))->with('error', 'Category not found');
+        if (!$category) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Category not found.'
+            ]);
         }
 
-        return view('admin/category/update', $data);
+        // ✅ Return JSON (used for AJAX modal)
+        return $this->response->setJSON($category);
     }
+
     public function update()
     {
-        $model=new CategoryModel();
-        $id=$this->request->getPost('id');
-        $category=$model->find($id);
-        if(!$category){
+        $model = new CategoryModel();
+        $id = $this->request->getPost('id');
+        $category = $model->find($id);
+
+        if (!$category) {
             return $this->response->setJSON([
-                'status'=>'error',
-                'message'=>'Category not found'
+                'status'  => 'error',
+                'message' => 'Category not found.'
             ]);
         }
-         $validation = \Config\Services::validation();
-         $validation->setRules([
-              'name' => "required|min_length[2]|max_length[100]|is_unique[categories.name,id,{$id}]",
+
+        $validation = \Config\Services::validation();
+        $validation->setRules([
+            'name'        => "required|min_length[2]|max_length[100]|is_unique[categories.name,id,{$id}]",
             'description' => 'permit_empty|max_length[255]',
-            'status' => 'required|in_list[active,inactive]',
-         ]);
-         if(!$validation->withRequest($this->request)->run()){
+            'status'      => 'required|in_list[active,inactive]',
+        ]);
+
+        if (!$validation->withRequest($this->request)->run()) {
             return $this->response->setJSON([
-                'status'=>'error',
-                'errors'=>$validation->getErrors()
+                'status' => 'error',
+                'errors' => $validation->getErrors()
             ]);
-         }
-         $model->update($id,[
+        }
+
+        $model->update($id, [
             'name'        => $this->request->getPost('name'),
             'description' => $this->request->getPost('description'),
             'status'      => $this->request->getPost('status'),
-         ]);
-         return $this->response->setJSON([
-            'status'=>'success',
-            'message'=>'Category updated successfully'
-         ]);
+        ]);
 
+        return $this->response->setJSON([
+            'status'  => 'success',
+            'message' => 'Category updated successfully ✅'
+        ]);
     }
     public function delete($id)
     {
@@ -109,4 +118,18 @@ class Category extends BaseController
             'message' => 'Category deleted successfully 🗑️'
         ]);
     }
+    public function getActiveCategories()
+{
+    $model = new CategoryModel();
+    $categories = $model->where('status', 'active')->orderBy('name', 'ASC')->findAll();
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'categories' => $categories
+    ]);
 }
+
+  
+        
+    }
+
